@@ -35,8 +35,8 @@ args = vars(ap.parse_args())
 # initialize the number of epochs to train for, initial learning rate,
 # and batch size
 EPOCHS = 50
-INIT_LR = 1e-1
-BS = 128
+INIT_LR = 1e-2
+BS = 256
 
 # load the A-Z and MNIST datasets, respectively
 print("[INFO] loading datasets...")
