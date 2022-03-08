@@ -111,8 +111,8 @@ H = model.fit(
 
 # define the list of label names
 labelNames = "0123456789"
-labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 labelNames += "ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيﻵﻷﻹﻻ𘚟"
+labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 labelNames = [l for l in labelNames]
 
 # evaluate the network

@@ -94,6 +94,7 @@ preds = model.predict(chars)
 
 # define the list of label names
 labelNames = "0123456789"
+labelNames += "ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيﻵﻷﻹﻻ𘚟"
 labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 labelNames = [l for l in labelNames]
 
