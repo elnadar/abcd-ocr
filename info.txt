@@ -1,5 +1,0 @@
-|-- datasets
-|	|-- ar.csv === ar_digits_dataset_v3.csv ==> in ./prep/datasets
-|		|-- ar_codes.csv ==> label codes for ar.csv
-|	|-- en.csv === A_Z Handwritten Data.csv ==> in ./prep/datasets
-
