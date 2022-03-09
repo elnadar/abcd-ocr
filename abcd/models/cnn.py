@@ -25,10 +25,7 @@ class CNN:
         return model
 
     class callback(tf.keras.callbacks.Callback):
-        def __init__(self, callrate=.99):
-            super().__init__()
-            self.callrate = callrate
         def on_epoch_end(self, epoch, los={}):
-            if los['val_accuracy'] >= self.callrate:
+            if los['val_accuracy'] >= 0.99:
                 self.model.stop_training = True
             
