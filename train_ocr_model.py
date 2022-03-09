@@ -116,7 +116,7 @@ H = model.fit(
     epochs=EPOCHS,
     class_weight=classWeight,
     verbose=1,
-    callbacks=[CNN.callback()])
+    callbacks=[CNN.callback(.999)])
 
 # define the list of label names
 labelNames = "0123456789"
