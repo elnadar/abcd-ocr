@@ -5,6 +5,7 @@ matplotlib.use("Agg")
 # import the necessary packages
 from abcd.models import CNN
 
+import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import load_model
 
@@ -20,18 +21,20 @@ import cv2
 
 # construct the argument parser and parse the arguments
 ap = argparse.ArgumentParser()
-ap.add_argument("-e", "--en", required=True,
-help="path to EN dataset")
-ap.add_argument("-a", "--ar", required=True,
+ap.add_argument("-d", "--data", type=str, default='./datasets/data.npz',
 help="path to AR dataset")
-ap.add_argument("-m", "--model", type=str, required=False, default='./abcd-ocr.model',
+ap.add_argument("-f", "--from", type=str, required=False, default='./models/abcd-ocr-v2.model',
 	help="path to trained handwriting recognition model")
+ap.add_argument("-t", "--to", type=str, required=False, default='./models/abcd-ocr-v3.model',
+	help="path to trained handwriting recognition model")
+ap.add_argument("-p", "--plot", type=str, default="plot.png",
+    help="path to output training history file")
 
 args = vars(ap.parse_args())
 
 # initialize the number of epochs to train for, initial learning rate,
 # and batch size
-EPOCHS = 50
+EPOCHS = 100
 INIT_LR = 1e-1
 BS = 256
 
@@ -45,7 +48,7 @@ print("[INFO] loading datasets...")
 # data = np.vstack([arData, enData, digitsData])
 # labels = np.hstack([arLabels, enLabels, digitsLabels])
 
-data, labels = np.load('datasets/data.npz')
+data, labels = np.load('datasets/data.npz').values()
 
 # each image in the A-Z and MNIST digts datasets are 28x28 pixels;
 # however, the architecture we're using is designed for 32x32 images,
@@ -87,7 +90,16 @@ aug = ImageDataGenerator(
     fill_mode="nearest")
 
 print("[INFO] loading handwriting OCR model...")
-model = load_model(args["model"])
+model = load_model(args["from"])
+
+checkpoint_filepath = './tmp/checkpoint'
+model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+    filepath=checkpoint_filepath,
+    save_weights_only=True,
+    monitor='val_accuracy',
+    mode='max',
+    save_best_only=True)
+
 
 # train the network
 print("[INFO] training network...")
@@ -98,7 +110,8 @@ H = model.fit(
     epochs=EPOCHS,
     class_weight=classWeight,
     verbose=1,
-    callbacks=[CNN.callback(.999)])
+    callbacks=[CNN.callback(.999), model_checkpoint_callback])
+
 
 # define the list of label names
 labelNames = "0123456789"
@@ -113,7 +126,9 @@ print(classification_report(testY.argmax(axis=1),
 
 # save the model to disk
 print("[INFO] serializing network...")
-model.save(args["model"], save_format="h5")
+model.save("1. " + args["to"], save_format="h5")
+model.load_weights(checkpoint_filepath)
+model.save("2. " + args["to"], save_format="h5")
 
 # construct a plot that plots and saves the training history
 N = np.arange(0, EPOCHS)
