@@ -13,7 +13,7 @@ import cv2
 ap = argparse.ArgumentParser()
 ap.add_argument("-i", "--image", required=True,
 	help="path to input image")
-ap.add_argument("-m", "--model", type=str, required=False, default='./handwriting.model',
+ap.add_argument("-m", "--model", type=str, required=False, default='./abcd-ocr.model',
 	help="path to trained handwriting recognition model")
 args = vars(ap.parse_args())
 

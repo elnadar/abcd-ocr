@@ -36,7 +36,7 @@ args = vars(ap.parse_args())
 # initialize the number of epochs to train for, initial learning rate,
 # and batch size
 EPOCHS = 50
-INIT_LR = 1e-2
+INIT_LR = 1e-1
 BS = 256
 
 # load the A-Z and MNIST datasets, respectively
@@ -112,7 +112,7 @@ print("[INFO] training network...")
 H = model.fit(
     aug.flow(trainX, trainY, batch_size=BS),
     validation_data=(testX, testY),
-    # steps_per_epoch=len(trainX) // BS,
+    steps_per_epoch=512,
     epochs=EPOCHS,
     class_weight=classWeight,
     verbose=1,
