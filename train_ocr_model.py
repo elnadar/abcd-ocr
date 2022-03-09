@@ -97,14 +97,14 @@ aug = ImageDataGenerator(
 
 # initialize and compile our deep neural network
 print("[INFO] compiling model...")
-# opt = SGD(lr=INIT_LR, decay=INIT_LR / EPOCHS)
+opt = SGD(lr=INIT_LR, decay=INIT_LR / EPOCHS)
 # model = ResNet.build(32, 32, 1, len(le.classes_), (3, 3, 3),
 #     (64, 64, 128, 256), reg=0.0005)
 # model.compile(loss="categorical_crossentropy", optimizer=opt,
 #     metrics=["accuracy"])
 
 model = CNN.model(32, 32, 1, len(le.classes_))
-model.compile(optimizer='adam',
+model.compile(optimizer=opt,
               loss='categorical_crossentropy', metrics=['accuracy'])
 
 # train the network
@@ -112,7 +112,7 @@ print("[INFO] training network...")
 H = model.fit(
     aug.flow(trainX, trainY, batch_size=BS),
     validation_data=(testX, testY),
-    steps_per_epoch=len(trainX) // BS,
+    # steps_per_epoch=len(trainX) // BS,
     epochs=EPOCHS,
     class_weight=classWeight,
     verbose=1,
