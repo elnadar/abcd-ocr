@@ -20,5 +20,3 @@ pbar = progressbar.ProgressBar(maxval=len(train_paths),
 # writing
 imagePaths = zip(train_paths, cleaned_paths)
 csv = open(config.FEATURES_PATH, "w")
-
-print()
