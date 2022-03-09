@@ -4,6 +4,7 @@ matplotlib.use("Agg")
 
 # import the necessary packages
 from abcd.models import ResNet
+from abcd.models import CNN
 from abcd.ch_dataset import load_mnist_dataset
 from abcd.ch_dataset import load_ch_dataset
 
@@ -40,17 +41,20 @@ BS = 256
 
 # load the A-Z and MNIST datasets, respectively
 print("[INFO] loading datasets...")
-(enData, enLabels) = load_ch_dataset(args["en"])
+# (enData, enLabels) = load_ch_dataset(args["en"])
 (arData, arLabels) = load_ch_dataset(args["ar"])
 (digitsData, digitsLabels) = load_mnist_dataset()
 
 # the MNIST dataset occupies the labels 0-9, so let's add 10 to every
 # A-Z label to ensure the A-Z characters are not incorrectly labeled
 # as digits
-enLabels += 51
+# enLabels += 51
 # stack the A-Z data and labels with the MNIST digits data and labels
-data = np.vstack([arData, enData, digitsData])
-labels = np.hstack([arLabels, enLabels, digitsLabels])
+# data = np.vstack([arData, enData, digitsData])
+# labels = np.hstack([arLabels, enLabels, digitsLabels])
+
+data = np.vstack([arData, digitsData])
+labels = np.hstack([arLabels, digitsLabels])
 
 # each image in the A-Z and MNIST digts datasets are 28x28 pixels;
 # however, the architecture we're using is designed for 32x32 images,
@@ -93,11 +97,15 @@ aug = ImageDataGenerator(
 
 # initialize and compile our deep neural network
 print("[INFO] compiling model...")
-opt = SGD(lr=INIT_LR, decay=INIT_LR / EPOCHS)
-model = ResNet.build(32, 32, 1, len(le.classes_), (3, 3, 3),
-    (64, 64, 128, 256), reg=0.0005)
-model.compile(loss="categorical_crossentropy", optimizer=opt,
-    metrics=["accuracy"])
+# opt = SGD(lr=INIT_LR, decay=INIT_LR / EPOCHS)
+# model = ResNet.build(32, 32, 1, len(le.classes_), (3, 3, 3),
+#     (64, 64, 128, 256), reg=0.0005)
+# model.compile(loss="categorical_crossentropy", optimizer=opt,
+#     metrics=["accuracy"])
+
+model = CNN.model()
+model.compile(optimizer='adam',
+              loss='categorical_crossentropy', metrics=['accuracy'])
 
 # train the network
 print("[INFO] training network...")
@@ -107,12 +115,13 @@ H = model.fit(
     steps_per_epoch=len(trainX) // BS,
     epochs=EPOCHS,
     class_weight=classWeight,
-    verbose=1)
+    verbose=1,
+    callbacks=[CNN.callback()])
 
 # define the list of label names
 labelNames = "0123456789"
 labelNames += "ءآأؤإئابةتثجحخدذرزسشصضطظعغفقكلمنهوىيﻵﻷﻹﻻ𘚟"
-labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+# labelNames += "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 labelNames = [l for l in labelNames]
 
 # evaluate the network
