@@ -20,7 +20,7 @@ class CNN:
                 tf.keras.layers.Dropout(0.1),
                 tf.keras.layers.Dense(512, activation='relu'),
                 tf.keras.layers.Dropout(0.1),
-                tf.keras.layers.Dense(50, activation='softmax')
+                tf.keras.layers.Dense(51, activation='softmax')
         ])
         return model
 
