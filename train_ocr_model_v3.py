@@ -9,6 +9,7 @@ import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.models import load_model
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.optimizers import SGD
 
 from sklearn.preprocessing import LabelBinarizer
 from sklearn.model_selection import train_test_split
@@ -91,15 +92,20 @@ aug = ImageDataGenerator(
     fill_mode="nearest")
 
 print("[INFO] loading handwriting OCR model...")
-# pre_model = load_model(args["from"])
+model = load_model(args["from"])
 
-opt = Adam(lr=INIT_LR, decay=INIT_LR / EPOCHS)
-model = CNN.model(32, 32, 1, len(le.classes_))
+for layer in model.layers:
+    layer.trainable = False
+
+opt = SGD(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS,)
+opt = Adam(learning_rate=INIT_LR, decay=INIT_LR / EPOCHS)
+
 model.compile(optimizer=opt,
-              loss='categorical_crossentropy', metrics=['accuracy'])
+              loss='categorical_crossentropy', metrics=['accuracy'], )
 model.load_weights(args["from"])
 
-
+for layer in model.layers:
+    layer.trainable = True
 
 checkpoint_filepath = './tmp/checkpoint'
 model_checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
