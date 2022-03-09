@@ -103,7 +103,7 @@ print("[INFO] compiling model...")
 # model.compile(loss="categorical_crossentropy", optimizer=opt,
 #     metrics=["accuracy"])
 
-model = CNN.model()
+model = CNN.model(len(le.classes_))
 model.compile(optimizer='adam',
               loss='categorical_crossentropy', metrics=['accuracy'])
 

@@ -5,7 +5,7 @@ from tensorflow.keras.utils import to_categorical
 
 class CNN:
     @staticmethod
-    def model(**args):
+    def model(classes, **args):
         model = tf.keras.models.Sequential([
                 tf.keras.layers.Conv2D(256, (3,3), activation='relu', input_shape=(65, 41, 1), padding='same'),
                 tf.keras.layers.MaxPooling2D((2,2)),
@@ -20,7 +20,7 @@ class CNN:
                 tf.keras.layers.Dropout(0.1),
                 tf.keras.layers.Dense(512, activation='relu'),
                 tf.keras.layers.Dropout(0.1),
-                tf.keras.layers.Dense(51, activation='softmax')
+                tf.keras.layers.Dense(classes, activation='softmax')
         ])
         return model
 
