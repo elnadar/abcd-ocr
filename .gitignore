@@ -2,3 +2,4 @@ datasets/data.npz
 abcd/denoiser/datasets/denoising-dirty-documents/denoiser_features.csv
 denoise/
 *pycache__
+*.ipynb_checkpoints
